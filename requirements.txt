@@ -1,0 +1,56 @@
+# HDRM scripts dependencies
+#
+# hrdm_core.py:      standard library only (os, time)
+# HRDM.py:            standard library only (argparse, os, time)
+# HRDM_gui.py:        standard library + Tkinter (json, os, queue, threading, time, tkinter)
+# HRDM_gui_pyqt.py:   standard library + PyQt5 (pyqtgraph is optional, for the
+#                      small chi/th pass-position plot -- the GUI runs fine
+#                      without it, just without that plot panel)
+#
+# You do NOT need both GUIs -- pick whichever toolkit you already have
+# (or prefer to install). Both wrap the exact same scan logic in
+# hrdm_core.py, so they behave identically.
+#
+# ---- Tkinter GUI (HRDM_gui.py) ----
+# Tkinter ships with the standard python.org installers on Windows and
+# macOS, and with most Linux distro Python packages. If it's missing
+# on Linux:
+#   Debian/Ubuntu:  sudo apt-get install python3-tk
+#   Fedora:         sudo dnf install python3-tkinter
+#
+# ---- PyQt5 GUI (HRDM_gui_pyqt.py) ----
+# Install with pip:
+PyQt5>=5.15
+pyqtgraph>=0.13   # optional -- only used for the chi/th pass-position plot
+#
+# (This file lists real pip packages for the PyQt5 GUI. HRDM.py and
+# HRDM_gui.py need nothing from this list -- `pip install -r
+# requirements.txt` is only required if you plan to run
+# HRDM_gui_pyqt.py.)
+#
+# ---- Optional: real SPEC sending from HRDM_gui.py's Run Scan ----
+# id4b_pyspec is NOT required to run HRDM_gui.py or its Preview Log --
+# it's only imported lazily, the moment you click Run Scan with the
+# "SPEC host" field filled in. If it isn't installed, Run Scan reports
+# a clear error in the log and aborts that run rather than crashing.
+# See README.md ("stub by default, real SPEC sending is opt-in").
+#   id4b_pyspec   # install separately, per your facility's instructions
+#
+# ---- HRDM_spec_gui.py (merged scan GUI + raw command sender) ----
+# Unlike HRDM_gui.py, id4b_pyspec IS required here -- this window
+# connects to SPEC once at startup (same as spec_controller_gui.py),
+# not lazily, so id4b_pyspec must be importable before you can even
+# open the window. Install it the same way as above.
+#
+# ---- Optional: "Read from EPICS" button (both Tkinter GUIs) ----
+# pyepics is NOT required to run either Tkinter GUI (HRDM_gui.py or
+# HRDM_spec_gui.py) -- it's only imported lazily, the moment you click
+# the detector trigger mode field's "Read from EPICS" button. If it
+# isn't installed, that button logs a clear message telling you to
+# install it (or just set the dropdown by hand) instead of crashing.
+# Reads PIL10:cam1:TriggerMode_RBV -- see hrdm_core.TRIGGER_MODE_PV /
+# TRIGGER_MODE_STATES.
+pyepics   # optional -- install separately if you want live EPICS reads
+#
+# Requirements:
+#   - Python 3.7+
